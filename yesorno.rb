@@ -5,9 +5,13 @@ Bundler.require
 require 'open-uri'
 
 def latest_tweet(screen_name)
-  json = open("https://api.twitter.com/1/statuses/user_timeline.json?screen_name=#{screen_name}&count=1").read
-  tweet = JSON.parse(json)
-  tweet.size > 0 ? tweet[0]['text'] : ''
+  begin
+    json = open("https://api.twitter.com/1/statuses/user_timeline.json?screen_name=#{screen_name}&count=1").read
+    tweet = JSON.parse(json)
+    tweet.size > 0 ? tweet[0]['text'] : ''
+  rescue
+    ''
+  end
 end
 
 get '/' do
