@@ -11,11 +11,10 @@ def latest_tweet(screen_name)
     tweet = JSON.parse(json)[0]
     text = tweet['text']
     @tweet_url = "https://twitter.com/#{screen_name}/status/#{tweet['id_str']}"
-    @tweet_time = Time.parse(tweet['created_at'])
-    # @tweet_time = @tweet_time.getlocal(tweet['user']['utc_offset']) if tweet['user']['utc_offset']
+    # @tweet_time = Time.parse(tweet['created_at'])
     text
   rescue
-    ''
+    'MAYBE'
   end
 end
 
@@ -31,9 +30,8 @@ end
 
 def yes_or_no
   cache_control :public, :max_age => 30
-  puts @screen_name
-  is_yes = latest_tweet(@screen_name) =~ /yes/i
-  @answer = is_yes ? 'YES' : 'NO'
+  @answer = latest_tweet(@screen_name)
+  @answer = @answer =~ /yes/i ? 'YES' : 'NO' unless @answer == 'MAYBE'
   haml :index
 end
 
@@ -56,4 +54,3 @@ __END__
 %h1
   %a{ :href => @tweet_url }
     = @answer
-%div.time as of #{@tweet_time.strftime('%a, %b %-d %Y')}
