@@ -37,7 +37,7 @@ __END__
 @@ layout
 %html
   %head
-    %title #{@screen_name}?
+    %title #{@screen_name.gsub(/([A-Z])/, ' \1').strip}?
     :css
       body { margin-top: 80px; text-align:center; font-family: Helvetica, Arial, sans-serif }
       h1 { font-size: 48pt }
