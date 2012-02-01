@@ -5,13 +5,16 @@ Bundler.require
 require 'open-uri'
 
 def latest_tweet(screen_name)
-  begin
+  # begin
     json = open("https://api.twitter.com/1/statuses/user_timeline.json?screen_name=#{screen_name}&count=1").read
     tweet = JSON.parse(json)
-    tweet.size > 0 ? tweet[0]['text'] : ''
-  rescue
-    ''
-  end
+    text = tweet.size > 0 ? tweet[0]['text'] : ''
+    @tweet_url = tweet.size > 0 ? "https://twitter.com/#{screen_name}/status/#{tweet[0]['id_str']}" : ''
+    puts "url: #{@tweet_url}"
+    text
+  # rescue
+  #   ''
+  # end
 end
 
 get '/' do
@@ -41,8 +44,11 @@ __END__
     :css
       body { margin-top: 80px; text-align:center; font-family: Helvetica, Arial, sans-serif }
       h1 { font-size: 48pt }
+      h1, h1 a { color: #000; text-decoration: none }
   %body
     = yield
 
 @@ index
-%h1= @answer
+%h1
+  %a{ :href => @tweet_url }
+    = @answer
