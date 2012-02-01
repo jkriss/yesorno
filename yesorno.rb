@@ -6,16 +6,17 @@ require 'open-uri'
 
 def latest_tweet(screen_name)
   screen_name = screen_name[0,15]
-  # begin
+  begin
     json = open("https://api.twitter.com/1/statuses/user_timeline.json?screen_name=#{screen_name}&count=1").read
-    tweet = JSON.parse(json)
-    text = tweet[0]['text']
-    @tweet_url = "https://twitter.com/#{screen_name}/status/#{tweet[0]['id_str']}"
-    @tweet_time = Time.parse(tweet[0]['created_at'])
+    tweet = JSON.parse(json)[0]
+    text = tweet['text']
+    @tweet_url = "https://twitter.com/#{screen_name}/status/#{tweet['id_str']}"
+    @tweet_time = Time.parse(tweet['created_at'])
+    # @tweet_time = @tweet_time.getlocal(tweet['user']['utc_offset']) if tweet['user']['utc_offset']
     text
-  # rescue
-  #   ''
-  # end
+  rescue
+    ''
+  end
 end
 
 get '/' do
@@ -55,4 +56,4 @@ __END__
 %h1
   %a{ :href => @tweet_url }
     = @answer
-%div.time as of #{@tweet_time.strftime('%a, %b %-d %Y, %-I:%m %p')}
+%div.time as of #{@tweet_time.strftime('%a, %b %-d %Y')}
