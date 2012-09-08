@@ -19,7 +19,7 @@ def latest_tweet(screen_name)
 end
 
 get '/' do
-  @screen_name = request.host.split('.').first
+  @screen_name = ENV["SCREEN_NAME"] || request.host.split('.').first
   yes_or_no
 end
 
